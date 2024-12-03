@@ -15,38 +15,67 @@
 #
 #########################################
 from pprint import pprint
+import argparse
 
-listA, listB = [], []
-totalDiff = 0
+parser = argparse.ArgumentParser("AoC_Day_1")
 
-with open("inputs.txt","r") as f:
-    inputs = f.read()
+parser.add_argument("-m", "--mode", help="what mode are you using? count or freq", type=str)
+parser.add_argument("-t","--test", nargs="?", help="use Test data", const=False, type=bool)
+parser.add_argument("-d","--debug", nargs="?", help="show Debug data", const=False, type=bool)
+args = vars(parser.parse_args())
 
+pprint(args)
 
-#pprint(inputs)
-inputArr = inputs.split("\n")
-# The last item in the list is empty so chuck it
-del inputArr[-1]
+def dpprint(value):
+    if args["debug"]:
+        pprint(value)
 
-# 
-for line in inputArr:
-    tmp = line.split()
-    listA.append(tmp[0])
-    listB.append(tmp[1])
+def read_n_sort(test=args["test"]):
 
-listA = [int(x) for x in listA]
-listB = [int(x) for x in listB]
+    listA, listB = [], []
 
-listA.sort()
-listB.sort()
+    file = "inputs.txt"
+    if test:
+        file = "test.txt"
 
+    with open("inputs.txt","r") as f:
+        inputs = f.read()
+    
+    inputArr = inputs.split("\n")
+    # The last item in the list is empty so chuck it
+    del inputArr[-1]
 
-pprint(listA)
-pprint(listB)
-for x in range(0, len(listA)):
-    absolute = abs(listA[x] - listB[x])
-    totalDiff = totalDiff + absolute
-    print("Absolute: {}", absolute)
-    #print("Running Total: {}", totalDiff)
+    for line in inputArr:
+        tmp = line.split()
+        listA.append(tmp[0])
+        listB.append(tmp[1])
 
-print("Total: {}", totalDiff)
+    listA = [int(x) for x in listA]
+    listB = [int(x) for x in listB]
+
+    listA.sort()
+    listB.sort()
+
+    return listA, listB
+
+def count_diff(listA, listB):
+    totalDiff = 0
+    for x in range(0, len(listA)):
+        absolute = abs(listA[x] - listB[x])
+        totalDiff = totalDiff + absolute
+        dpprint(F"Absolute:{absolute}")
+        dpprint(F"Running Total: {totalDiff}")
+    dpprint(F"Total:{totalDiff}")
+
+    return totalDiff
+
+def main():
+    print("starting Main")
+    listA, listB = read_n_sort()
+    if args["mode"] == "count":
+        print("This Total = {}".format(count_diff(listA, listB)))
+    elif args["mode"] == "freq":
+        print("missing")
+    else:
+        print("doing Neither")
+main()
