@@ -69,13 +69,19 @@ def count_diff(listA, listB):
 
     return totalDiff
 
+def count_frequency(listA, listB):
+    running_total = 0
+    for x in range(0, len(listA)):
+        running_total =  running_total + (listB.count(listA[x]) * listA[x])
+    return running_total
+
 def main():
     print("starting Main")
     listA, listB = read_n_sort()
     if args["mode"] == "count":
         print("This Total = {}".format(count_diff(listA, listB)))
     elif args["mode"] == "freq":
-        print("missing")
+        print(count_frequency(listA, listB))
     else:
         print("doing Neither")
 main()
