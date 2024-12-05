@@ -38,7 +38,7 @@ def read_n_sort(test=args["test"]):
     if test:
         file = "test.txt"
 
-    with open("inputs.txt","r") as f:
+    with open(file, "r") as f:
         inputs = f.read()
     
     inputArr = inputs.split("\n")
