@@ -13,11 +13,14 @@ parser.add_argument("-t", "--test", help="use test data", nargs="?", const=False
 parser.add_argument("-p", "--part", help="part 1 or 2?", type=int, default=1)
 args = vars(parser.parse_args())
 
-
-
 def main():
-    read()
-    print("DoaThing")
+    pprint(args)
+    search = read()
+    if args['part'] == 1:
+        part1(search)
+    elif args['part'] == 2:
+        print("Part 2")
+        part2(search)
 
 def flatten_list(nested_list):
     for x in range(nested_list):
@@ -60,25 +63,33 @@ def collapse_array(arr):
         collapse.append("".join(row))
     return collapse 
         
+def part1(search):
+    rightdiag, leftdiag, turn90 = turn_diag(len(search), len(search[0]), search)
 
-search = read()
-rightdiag, leftdiag, turn90= turn_diag(len(search), len(search[0]), search)
+    leftdiag = collapse_array(leftdiag)
+    rightdiag = collapse_array(rightdiag)
+    search = collapse_array(search)
+    turn90 = collapse_array(turn90)
 
-leftdiag = collapse_array(leftdiag)
-rightdiag = collapse_array(rightdiag)
-search = collapse_array(search)
-turn90 = collapse_array(turn90)
+    count = 0
+    count = count + sum([x.count('XMAS') for x in rightdiag])
+    count = count + sum([x.count('SAMX') for x in rightdiag])
+    count = count + sum([x.count('XMAS') for x in leftdiag])
+    count = count + sum([x.count('SAMX') for x in leftdiag])
+    count = count + sum([x.count('XMAS') for x in turn90])
+    count = count + sum([x.count('SAMX') for x in turn90])
+    count = count + sum([x.count('XMAS') for x in search])
+    count = count + sum([x.count('SAMX') for x in search])
+    print(count)
 
-count = 0
+def part2(search):
+    counter = 0
+    for x in range(len(search)-2):
+        for y in range(len(search[0])-2):
+            if search[y+1][x+1] == 'A':
+                if ((search[y][x] == 'M' and search[y+2][x+2] == 'S') or (search[y][x] == 'S' and search[y+2][x+2] == 'M')):
+                    if ((search[y+2][x] == 'M' and search[y][x+2] == 'S') or (search[y+2][x] == 'S' and search[y][x+2] == 'M')):
+                        counter = counter + 1
+    print(counter)
 
-count = count + sum([x.count('XMAS') for x in rightdiag])
-count = count + sum([x.count('SAMX') for x in rightdiag])
-count = count + sum([x.count('XMAS') for x in leftdiag])
-count = count + sum([x.count('SAMX') for x in leftdiag])
-count = count + sum([x.count('XMAS') for x in turn90])
-count = count + sum([x.count('SAMX') for x in turn90])
-count = count + sum([x.count('XMAS') for x in search])
-count = count + sum([x.count('SAMX') for x in search])
-
-
-pprint(count)
+main()
